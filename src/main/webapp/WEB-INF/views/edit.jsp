@@ -2,6 +2,7 @@
 contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
+<%@ page import="entity.DBWork" %>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -13,18 +14,54 @@ contentType="text/html; charset=UTF-8"
 </head>
 <body>
 	<h1>todo編集</h1>
+	<% DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser"); %>
+			<% if (loggedInUser != null) { %>
+			    <p><%= loggedInUser.getName() %>さん</p>
+			<% } %>
 	<p><%= request.getAttribute("message") %></p>
-	<form action="update" method="get">
-		<input type="hidden" name="id" value='<%= request.getAttribute("id") %>'>
-		<label for="title">タイトル</label><br>
-		<input type="text" name="title" value='<%= request.getAttribute("title") %>'><br>
+	
+	<% HashMap<String, String> todoDetails = (HashMap<String, String>) request.getAttribute("todoDetails"); %>
+	<% String priority = todoDetails.get("priority"); %>
+	
+	
+    <% if (todoDetails != null) { %>
+    	<% String selectedGenre = todoDetails.get("genre"); %>
+	
+		<form action="update" method="get">
+			<label for="title">タイトル</label><br>
+			<input type="text" name="title" value='<%= todoDetails.get("title") %>'><br>
+			<br>
+			
+			<label for="content">本文</label><br>
+			<textarea name="content" cols="30" rows="10"><%= todoDetails.get("content") %></textarea><br>
+			
+			<label for="genre">ジャンル</label><br>
+			<select name="genre" id="genre">
+			    <% if (loggedInUser.getGenre1() != null) { %>
+			        <option value="<%= loggedInUser.getGenre1() %>" <%= loggedInUser.getGenre1().equals(selectedGenre) ? "selected" : "" %>><%= loggedInUser.getGenre1() %></option>
+			    <% } %>
+			    <% if (loggedInUser.getGenre2() != null) { %>
+			        <option value="<%= loggedInUser.getGenre2() %>" <%= loggedInUser.getGenre2().equals(selectedGenre) ? "selected" : "" %>><%= loggedInUser.getGenre2() %></option>
+			    <% } %>
+			    <% if (loggedInUser.getGenre3() != null) { %>
+			        <option value="<%= loggedInUser.getGenre3() %>" <%= loggedInUser.getGenre3().equals(selectedGenre) ? "selected" : "" %>><%= loggedInUser.getGenre3() %></option>
+		    	<% } %>
+			</select>
+			
 		<br>
-		<label for="content">本文</label><br>
-		<textarea name="content" cols="30" rows="10"><%= request.getAttribute("content") %></textarea><br>
+		
+		<label for="priority">優先度</label><br>
+		<input type="radio" name="priority" value="0"  <%= "High".equals(priority) ? "checked" : "" %>> High
+		<input type="radio" name="priority" value="1"  <%= "Normal".equals(priority) ? "checked" : "" %>> Normal
+		<input type="radio" name="priority" value="2"  <%= "Low".equals(priority) ? "checked" : "" %>> Low
 		<br>
+		
+		
 		<button type="submit">保存する</button>
-		<a href='/show?id=<%= request.getAttribute("id") %>'>キャンセル</a>
+		<a href='show?id=<%= todoDetails.get("id") %>'>キャンセル</a>
 	</form>
+	
+	 <% } %>
 	<ul>
 		<li><a href="list">戻る</a></li>
 	</ul>

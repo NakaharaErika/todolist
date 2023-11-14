@@ -22,5 +22,13 @@ public class DBWorkService {
 	public List<HashMap<String, String>> getTodoListBySort(String no, String item, String sort) {
 	    return dao.getTodosBySort(no,item,sort);
 	}
+	
+	public HashMap<String, String> getTodoListByNo(String todoNo) {
+		return dao.getTodoByNo(todoNo);
+	}
+	
+	public void updateTodoList(String todoNo,String title,String content,String genre,String priority) {
+		dao.updateTodo(todoNo,title,content,genre,priority);
+	}
 
 }

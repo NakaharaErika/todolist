@@ -40,6 +40,12 @@ public class DBWorkDaoJDBC {
 					dbWork.setName(name);
 					String no = rs.getString("No");
 					dbWork.setNo(no);
+					String genre1 = rs.getString("genre1");
+					dbWork.setGenre1(genre1);
+					String genre2 = rs.getString("genre2");
+					dbWork.setGenre2(genre2);
+					String genre3 = rs.getString("genre3");
+					dbWork.setGenre3(genre3);
 					
 					return dbWork;
 				}
@@ -116,6 +122,48 @@ public class DBWorkDaoJDBC {
 				e1.printStackTrace();
 			}
 		    return rows;
-		}		
+		}
+		
+		//todoテーブルから該当番号のカラム詳細を取得
+		public HashMap<String, String> getTodoByNo(String todoNo) {
+		    HashMap<String, String> todoData = new HashMap<>();
+		    try (Connection connection = createConnection()) {
+		        PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM todo INNER JOIN priority ON todo.priority = priority.id WHERE No = ?");
+		        pstmt.setString(1, todoNo);
+		        ResultSet rs = pstmt.executeQuery();
+
+		        if (rs.next()) {
+		            todoData.put("id", rs.getString("No"));
+		            todoData.put("title", rs.getString("title"));
+		            todoData.put("content", rs.getString("content"));
+		            todoData.put("genre", rs.getString("genre"));
+		            todoData.put("priority", rs.getString("priorityLevel"));
+
+		            java.sql.Timestamp timestamp = rs.getTimestamp("date");
+		            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		            todoData.put("date", dateFormat.format(timestamp));
+		        }
+		    } catch (SQLException | ClassNotFoundException e) {
+		        throw new RuntimeException(e);
+		    }
+		    return todoData;
+		}
+		
+		//updateServletから渡された値を入れてDBを更新する
+				public void updateTodo(String todoNo,String title,String content,String genre,String priority) {
+				    try (Connection connection = createConnection()) {
+				        PreparedStatement pstmt = connection.prepareStatement("UPDATE todo SET title=?, content=?, genre=?, priority=? WHERE No = ?");
+				        pstmt.setString(1, title);
+				        pstmt.setString(2, content);
+				        pstmt.setString(3, genre);
+				        pstmt.setString(4, priority);
+				        pstmt.setString(5, todoNo);
+				        pstmt.executeUpdate();
+				    } catch (SQLException | ClassNotFoundException e) {
+				        throw new RuntimeException(e);
+				    }
+				}
+
+				
 
 }
