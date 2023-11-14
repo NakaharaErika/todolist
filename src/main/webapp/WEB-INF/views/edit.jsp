@@ -29,6 +29,7 @@ contentType="text/html; charset=UTF-8"
 	
 		<form action="update" method="get">
 			<label for="title">タイトル</label><br>
+			<input type="hidden" name="id" value='<%= todoDetails.get("id") %>'>
 			<input type="text" name="title" value='<%= todoDetails.get("title") %>'><br>
 			<br>
 			
