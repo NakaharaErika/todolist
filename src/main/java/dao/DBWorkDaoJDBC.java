@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,12 +70,7 @@ public class DBWorkDaoJDBC {
 					columns.put("content", rs.getString("content"));
 					columns.put("genre", rs.getString("genre"));
 					columns.put("priority", rs.getString("priorityLevel"));
-					
-					//dateを格納
-					java.sql.Timestamp timestamp = rs.getTimestamp("date");
-		            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		            String formattedDate = dateFormat.format(timestamp);
-		            columns.put("date", formattedDate);
+					columns.put("date", rs.getString("date"));
 		            
 		            rows.add(columns);
 				}
@@ -106,12 +100,7 @@ public class DBWorkDaoJDBC {
 					columns.put("content", rs.getString("content"));
 					columns.put("genre", rs.getString("genre"));
 					columns.put("priority", rs.getString("priorityLevel"));
-					
-					//dateを格納
-					java.sql.Timestamp timestamp = rs.getTimestamp("date");
-		            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		            String formattedDate = dateFormat.format(timestamp);
-		            columns.put("date", formattedDate);
+					columns.put("date", rs.getString("date"));
 		            
 		            rows.add(columns);
 				}
@@ -138,10 +127,7 @@ public class DBWorkDaoJDBC {
 		            todoData.put("content", rs.getString("content"));
 		            todoData.put("genre", rs.getString("genre"));
 		            todoData.put("priority", rs.getString("priorityLevel"));
-
-		            java.sql.Timestamp timestamp = rs.getTimestamp("date");
-		            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		            todoData.put("date", dateFormat.format(timestamp));
+		            todoData.put("date", rs.getString("date"));
 		        }
 		    } catch (SQLException | ClassNotFoundException e) {
 		        throw new RuntimeException(e);
@@ -150,19 +136,63 @@ public class DBWorkDaoJDBC {
 		}
 		
 		//updateServletから渡された値を入れてDBを更新する
-				public void updateTodo(String todoNo,String title,String content,String genre,String priority) {
-				    try (Connection connection = createConnection()) {
-				        PreparedStatement pstmt = connection.prepareStatement("UPDATE todo SET title=?, content=?, genre=?, priority=? WHERE No = ?");
-				        pstmt.setString(1, title);
-				        pstmt.setString(2, content);
-				        pstmt.setString(3, genre);
-				        pstmt.setString(4, priority);
-				        pstmt.setString(5, todoNo);
-				        pstmt.executeUpdate();
-				    } catch (SQLException | ClassNotFoundException e) {
-				        throw new RuntimeException(e);
-				    }
-				}
+		public void updateTodo(String todoNo,String title,String content,String genre,String priority) {
+		    try (Connection connection = createConnection()) {
+		        PreparedStatement pstmt = connection.prepareStatement("UPDATE todo SET title=?, content=?, genre=?, priority=? WHERE No = ?");
+		        pstmt.setString(1, title);
+		        pstmt.setString(2, content);
+		        pstmt.setString(3, genre);
+		        pstmt.setString(4, priority);
+		        pstmt.setString(5, todoNo);
+		        pstmt.executeUpdate();
+		    } catch (SQLException | ClassNotFoundException e) {
+		        throw new RuntimeException(e);
+		    }
+		}
+		//priorityから値を取り出して、キーバリュー値として格納する
+		public List<HashMap<String, String>> getPriorities() {
+	        List<HashMap<String, String>> priorities = new ArrayList<>();
+	        try (Connection connection = createConnection()) {
+	            PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM priority");
+	            ResultSet rs = pstmt.executeQuery();
+
+	            while (rs.next()) {
+	                HashMap<String, String> priority = new HashMap<>();
+	                priority.put("id", rs.getString("id"));
+	                priority.put("priorityLevel", rs.getString("priorityLevel"));
+	                priorities.add(priority);
+	            }
+	        } catch (SQLException | ClassNotFoundException e) {
+	            throw new RuntimeException(e);
+	        }
+	        return priorities;
+	    }
+		
+		//updateServletから渡された値を入れてDBを更新する
+		public void destroyTodo(String todoNo) {
+		    try (Connection connection = createConnection()) {
+		        PreparedStatement pstmt = connection.prepareStatement("DELETE FROM todo WHERE No = ?");
+		        pstmt.setString(1, todoNo);
+		        pstmt.executeUpdate();
+		    } catch (SQLException | ClassNotFoundException e) {
+		        throw new RuntimeException(e);
+		    }
+		}
+		
+		//todoを新しく作成して挿入する
+		public void createTodo(String title,String content,String genre,String priority,String date) {
+		    try (Connection connection = createConnection()) {
+		        PreparedStatement pstmt = connection.prepareStatement("INSERT INTO todo (title, content, genre, priority, date) VALUES (?,?,?,?,?");
+		        pstmt.setString(1, title);
+		        pstmt.setString(2, content);
+		        pstmt.setString(3, genre);
+		        pstmt.setString(4, priority);
+		        pstmt.setString(5, date);
+		        pstmt.executeUpdate();
+		    } catch (SQLException | ClassNotFoundException e) {
+		        throw new RuntimeException(e);
+		    }
+		}
 
 				
 

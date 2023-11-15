@@ -30,5 +30,17 @@ public class DBWorkService {
 	public void updateTodoList(String todoNo,String title,String content,String genre,String priority) {
 		dao.updateTodo(todoNo,title,content,genre,priority);
 	}
+	
+	public List<HashMap<String, String>> getListPriorities() {
+	    return dao.getPriorities();
+	}
+	
+	public void destroyTodoList(String todoNo) {
+		dao.destroyTodo(todoNo);
+	}
+	
+	public void createTodoList(String title,String content,String genre,String priority,String date) {
+		dao.createTodo(title,content,genre,priority,date);
+	}
 
 }

@@ -1,8 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 
 import entity.DBWork;
 import jakarta.servlet.RequestDispatcher;
@@ -14,8 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import service.DBWorkService;
 
-@WebServlet("/edit")
-public class EditServlet extends HttpServlet {
+@WebServlet("/create")
+public class CreateServlet extends HttpServlet {
 	
 	private DBWorkService service = new DBWorkService();
 	
@@ -24,24 +22,26 @@ public class EditServlet extends HttpServlet {
 			request.setAttribute("message", "todoを管理しましょ");
 		}
 		
-		String postId = request.getParameter("id"); // String 型のまま使用
+		String title = request.getParameter("title"); 
+		String content = request.getParameter("content"); 
+		String genre = request.getParameter("genre"); 
+		String priority = request.getParameter("priority"); 
+		String date = request.getParameter("date"); 
+		
+		
         HttpSession session = request.getSession();
         DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 
         if (loggedInUser != null) {
-        	
-            HashMap<String, String> todoDetails = service.getTodoListByNo(postId); // 型変換は不要
-            request.setAttribute("todoDetails", todoDetails);
-            
-            List<HashMap<String, String>> priorities = service.getListPriorities();
-            request.setAttribute("priorities", priorities);
+            service.createTodoList(title,content,genre,priority,date);
+            request.setAttribute("message", "タイトル:" + title + "の新規作成ができました");
         } else {
             request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
         }
 
-        String view = "/WEB-INF/views/edit.jsp";
-        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
-        dispatcher.forward(request, response);
+        String forward = "/list";
+		RequestDispatcher dispatcher = request.getRequestDispatcher(forward);
+		dispatcher.forward(request, response);
 	}
 
 

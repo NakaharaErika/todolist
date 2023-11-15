@@ -1,8 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 
 import entity.DBWork;
 import jakarta.servlet.RequestDispatcher;
@@ -39,10 +37,8 @@ public class StartServlet extends HttpServlet {
 	    	//セッション情報を保持
 	    	HttpSession session = request.getSession();
 	        session.setAttribute("loggedInUser", dbWork);
-	    	//ユーザーのtodoリストを格納
-	    	List<HashMap<String, String>> todos = service.getTodoListByUserId(dbWork.getNo());
-	        request.setAttribute("rows", todos);
-	        view = "/WEB-INF/views/list.jsp";
+	    	
+	        view = "/list";
 	    } else {
 	        // ログイン失敗
 	        request.setAttribute("loginFailure", "IDかパスワードが異なります");
