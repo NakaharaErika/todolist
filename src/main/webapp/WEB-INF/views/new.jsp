@@ -54,9 +54,8 @@ contentType="text/html; charset=UTF-8"
 		
 		<label for="priority">優先度</label><br>
 		<% List<HashMap<String, String>> priorities = (List<HashMap<String, String>>) request.getAttribute("priorities"); %>
-		<% String currentPriority = todoDetails.get("priority"); %>
 		<% for (HashMap<String, String> prioritylist : priorities) { %>
-		    <input type="radio" name="priority" value="<%= prioritylist.get("id") %>" <%= prioritylist.get("priorityLevel").equals(currentPriority) ? "checked" : "" %>> <%= prioritylist.get("priorityLevel") %>
+		    <input type="radio" name="priority" value="<%= prioritylist.get("id") %>"> <%= prioritylist.get("priorityLevel") %>
 		<% } %>
 		<br>
 	

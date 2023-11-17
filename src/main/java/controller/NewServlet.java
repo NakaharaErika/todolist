@@ -21,6 +21,8 @@ public class NewServlet extends HttpServlet {
 		
 			request.setAttribute("message", "新規作成ページです");
 			
+			HashMap<String, String> todoDetails = service.getTodoListByNo(postId); // 型変換は不要
+            request.setAttribute("todoDetails", todoDetails);
 			List<HashMap<String, String>> priorities = service.getListPriorities();
             request.setAttribute("priorities", priorities);
             

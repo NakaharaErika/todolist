@@ -1,5 +1,6 @@
 package service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,9 +11,22 @@ public class DBWorkService {
 
 	DBWorkDaoJDBC dao = new DBWorkDaoJDBC();
 
-	public DBWork login(String id,String password) {
-		DBWork dbWork = new DBWork(id,password);
-		return dao.checkAccount(dbWork);
+	public DBWork login(String id,String pass) {
+		try {
+	        String hashedPassword = HashGenerator.generateHash(pass);
+	        DBWork dbWork = new DBWork(id, hashedPassword);
+	        return dao.checkAccount(dbWork);
+	    } catch (NoSuchAlgorithmException e) {
+	        e.printStackTrace();
+	        throw new RuntimeException(e);
+	    }
+	}
+	
+	public Boolean createAccount(String userId,String password,String userName,String genre1,String genre2,String genre3) {
+		if (dao.isUserIdExist(userId)) {
+			return dao.createAcc(userId, password,userName,genre1,genre2,genre3);
+		}
+		return false;
 	}
 	
 	public List<HashMap<String, String>> getTodoListByUserId(String no) {

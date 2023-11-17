@@ -29,7 +29,7 @@ public class SortServlet extends HttpServlet {
 		if (loggedInUser != null) {
 	        List<HashMap<String, String>> todos = service.getTodoListBySort(loggedInUser.getNo(), item, sort);
 	        request.setAttribute("rows", todos);
-	        request.setAttribute("message", sortItem(item) + "順に " + sortStr(sort) + "で並べ替えました");
+	        request.setAttribute("message", sortItem(item) + " 順に " + sortStr(sort) + " で並べ替えました");
 	    } else {
 	        // セッションにユーザー情報がない場合の処理
 	        request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");

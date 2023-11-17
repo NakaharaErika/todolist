@@ -41,7 +41,7 @@ public class StartServlet extends HttpServlet {
 	        view = "/list";
 	    } else {
 	        // ログイン失敗
-	        request.setAttribute("loginFailure", "IDかパスワードが異なります");
+	        request.setAttribute("message", "IDかパスワードが異なります");
 	        view = "/WEB-INF/views/login.jsp";
 	    }
 		

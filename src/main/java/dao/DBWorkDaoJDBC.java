@@ -1,5 +1,6 @@
 package dao;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,10 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import entity.DBWork;
+import service.HashGenerator;
 
 public class DBWorkDaoJDBC {
 
-	
+	//本当はSQLをString型で渡してくる。次から実践！
 	private Connection createConnection() throws ClassNotFoundException, SQLException {
 		String dbUrl = "jdbc:mysql://localhost/kogi_3";
 		String dbUser = "root";
@@ -53,6 +55,47 @@ public class DBWorkDaoJDBC {
 				throw new RuntimeException(e);
 			}
 		}
+		
+		// ユーザーIDが既に存在するかどうかをチェックするメソッド
+		public boolean isUserIdExist(String userId) {
+		    try (Connection conn = createConnection()) {
+		        String sql = "SELECT COUNT(*) FROM users WHERE userID = ?";
+		        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+		            stmt.setString(1, userId);
+		            ResultSet rs = stmt.executeQuery();
+		            if (rs.next()) {
+		                return true;
+		            }
+		        }
+		    } catch (ClassNotFoundException | SQLException e) {
+				throw new RuntimeException(e);
+			}
+		    return false;
+		}
+		
+		//ユーザーアカウントを新規登録
+		public Boolean createAcc(String userId,String pass,String userName,String genre1,String genre2,String genre3) {
+			try (Connection conn = createConnection()) {
+	            // 5.パスワードをハッシュ化する
+	            String hashedPassword = HashGenerator.generateHash(pass);
+	            String sql = "INSERT INTO users (userID, pass, name, genre1, genre2, genre3) VALUES (?, ?, ?, ?, ?, ?)";
+	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	                stmt.setString(1, userId);
+	                // 6.ハッシュ化した値を利用
+	                stmt.setString(2, hashedPassword);
+	                stmt.setString(3, userName);
+	                stmt.setString(4, genre1);
+	                stmt.setString(5, genre2);
+	                stmt.setString(6, genre3);
+	                stmt.execute();
+
+	                return true;
+	            }
+			} catch (ClassNotFoundException | NoSuchAlgorithmException | SQLException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
 		
 		//todoテーブルから該当ユーザーのデータリストを取得
 		public List<HashMap<String,String>> getTodosByUserId(String no) {
