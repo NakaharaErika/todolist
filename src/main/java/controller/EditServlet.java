@@ -20,28 +20,30 @@ public class EditServlet extends HttpServlet {
 	private DBWorkService service = new DBWorkService();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (request.getAttribute("message") == null) {
-			request.setAttribute("message", "todoを管理しましょ");
-		}
 		
-		String postId = request.getParameter("id"); // String 型のまま使用
         HttpSession session = request.getSession();
         DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 
         if (loggedInUser != null) {
+        	if (request.getAttribute("message") == null) {
+    			request.setAttribute("message", "todoを管理しましょ");
+    		}
+        	String postId = request.getParameter("id"); // String 型のまま使用
         	
             HashMap<String, String> todoDetails = service.getTodoListByNo(postId); // 型変換は不要
             request.setAttribute("todoDetails", todoDetails);
             
             List<HashMap<String, String>> priorities = service.getListPriorities();
             request.setAttribute("priorities", priorities);
+            
+            String view = "/WEB-INF/views/edit.jsp";
+            RequestDispatcher dispatcher = request.getRequestDispatcher(view);
+            dispatcher.forward(request, response);
         } else {
-            request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
+        	response.sendRedirect("start");
         }
 
-        String view = "/WEB-INF/views/edit.jsp";
-        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
-        dispatcher.forward(request, response);
+        
 	}
 
 

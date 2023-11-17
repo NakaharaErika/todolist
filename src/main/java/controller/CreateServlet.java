@@ -36,6 +36,7 @@ public class CreateServlet extends HttpServlet {
             service.createTodoList(title,content,genre,priority,date);
             request.setAttribute("message", "タイトル:" + title + "の新規作成ができました");
         } else {
+        	response.sendRedirect("login");
             request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
         }
 

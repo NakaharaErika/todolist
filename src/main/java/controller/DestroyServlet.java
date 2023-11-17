@@ -30,6 +30,7 @@ public class DestroyServlet extends HttpServlet {
         	service.destroyTodoList(postId);
             request.setAttribute("message", "ID:" + postId + "の削除ができました");
         } else {
+        	response.sendRedirect("login");
             request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
         }
 

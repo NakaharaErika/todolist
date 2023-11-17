@@ -5,8 +5,6 @@ public class DBWork {
 	private String no;
 	/** ユーザーID */
 	private String id;
-	/** パスワード */
-	private String pass;
 	/** 名前 */
 	private String name;
 	/** ジャンル1 */
@@ -23,9 +21,8 @@ public class DBWork {
 	}
 
 	
-	public DBWork(String id, String pass) {
+	public DBWork(String id) {
 		this.id = id;
-		this.pass = pass;
 	}
 	
 	
@@ -43,14 +40,6 @@ public class DBWork {
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	/**パスワードのゲッターとセッター*/
-	public String getPass() {
-		return pass;
-	}
-	public void setPass(String pass) {
-		this.pass = pass;
 	}
 
 	/**名前のゲッターとセッター*/

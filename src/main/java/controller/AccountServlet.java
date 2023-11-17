@@ -24,11 +24,20 @@ public class AccountServlet extends HttpServlet {
 	    String genre1 = request.getParameter("genre1");
 	    String genre2 = request.getParameter("genre2");
 	    String genre3 = request.getParameter("genre3");
-	
-	    Boolean message = service.createAccount(userId, password,userName,genre1,genre2,genre3);
-	    request.setAttribute("message", message);
 	    
-	    String view = message? "/start" : "/account";
+	    String message;
+	    String view;
+	    
+	    Boolean account =  service.createAccount(userId, password,userName,genre1,genre2,genre3);
+	    if(account) {
+	    	view = "/WEB-INF/views/login.jsp";
+	    	message ="アカウントを新規作成しました";
+	    	request.setAttribute("message", message);
+	    } else {
+	    	view = "/WEB-INF/views/account.jsp";
+	    	message ="このアカウント名はすでに存在しています";
+	    	request.setAttribute("message", message);
+	    }
 	    
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view);
 		dispatcher.forward(request, response);

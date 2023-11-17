@@ -27,6 +27,7 @@ public class ListServlet extends HttpServlet {
 	    	List<HashMap<String, String>> todos = service.getTodoListByUserId(loggedInUser.getNo());
 	        request.setAttribute("rows", todos);
 	 } else {
+		response.sendRedirect("login");
         request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
     }
 	 	
@@ -46,6 +47,7 @@ public class ListServlet extends HttpServlet {
 	    	List<HashMap<String, String>> todos = service.getTodoListByUserId(loggedInUser.getNo());
 	        request.setAttribute("rows", todos);
 	 } else {
+		 response.sendRedirect("login");
          request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
      }
 	 	

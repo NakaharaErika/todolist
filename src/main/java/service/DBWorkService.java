@@ -14,19 +14,22 @@ public class DBWorkService {
 	public DBWork login(String id,String pass) {
 		try {
 	        String hashedPassword = HashGenerator.generateHash(pass);
-	        DBWork dbWork = new DBWork(id, hashedPassword);
-	        return dao.checkAccount(dbWork);
+	        DBWork dbWork = new DBWork(id);
+	        return dao.checkAccount(dbWork,hashedPassword);
 	    } catch (NoSuchAlgorithmException e) {
 	        e.printStackTrace();
 	        throw new RuntimeException(e);
 	    }
 	}
 	
-	public Boolean createAccount(String userId,String password,String userName,String genre1,String genre2,String genre3) {
-		if (dao.isUserIdExist(userId)) {
-			return dao.createAcc(userId, password,userName,genre1,genre2,genre3);
-		}
-		return false;
+	public Boolean createAccount(String userId, String password, String userName, String genre1, String genre2, String genre3) {
+	    // ユーザーIDが既に存在するかどうかをチェック
+	    if (!dao.doesUserIdExist(userId)) {
+	        // 存在しない場合は新規アカウントを作成
+	        return dao.createAcc(userId, password, userName, genre1, genre2, genre3);
+	    }
+	    // 存在する場合は false を返す
+	    return false;
 	}
 	
 	public List<HashMap<String, String>> getTodoListByUserId(String no) {

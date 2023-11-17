@@ -57,9 +57,11 @@ contentType="text/html; charset=UTF-8"
 		<option value = "desc">降順</option>
 	</select>
 	<input type = "submit" value = "実行">
-</form>
+
 	<br>
 	<p><a href='new'>新規作成</a><p>
-	
+	<br>
+	<input type="submit" value="ログアウト">
+</form>	
 </body>
 </html>

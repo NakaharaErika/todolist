@@ -26,14 +26,14 @@ public class DBWorkDaoJDBC {
 	}
 	
 	   //ユーザーが存在しているかどうか確認
-		public DBWork checkAccount(DBWork dbWork) {
+		public DBWork checkAccount(DBWork dbWork, String pass) {
 			// DBコネクション生成
 			try (Connection connection = createConnection()) {
 				// SQL実行オブジェクト生成
 				PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM account WHERE userID=? AND pass=?");
 				// SQL パラメータ設定
 				pstmt.setString(1, dbWork.getId());
-				pstmt.setString(2, dbWork.getPass());
+				pstmt.setString(2, pass);
 				// SQL実行
 				ResultSet rs = pstmt.executeQuery();
 				if (rs.next()) {
@@ -57,28 +57,27 @@ public class DBWorkDaoJDBC {
 		}
 		
 		// ユーザーIDが既に存在するかどうかをチェックするメソッド
-		public boolean isUserIdExist(String userId) {
-		    try (Connection conn = createConnection()) {
-		        String sql = "SELECT COUNT(*) FROM users WHERE userID = ?";
-		        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-		            stmt.setString(1, userId);
-		            ResultSet rs = stmt.executeQuery();
-		            if (rs.next()) {
-		                return true;
-		            }
+		public boolean doesUserIdExist(String userId) {
+		    try (Connection connection = createConnection()) {
+		        PreparedStatement pstmt = connection.prepareStatement("SELECT COUNT(*) FROM account WHERE userID = ?");
+		        pstmt.setString(1, userId);
+		        ResultSet rs = pstmt.executeQuery();
+		        if (rs.next()) {
+		            return rs.getInt(1) > 0;
 		        }
+		        return false;
 		    } catch (ClassNotFoundException | SQLException e) {
-				throw new RuntimeException(e);
-			}
-		    return false;
+		        throw new RuntimeException(e);
+		    }
 		}
+
 		
 		//ユーザーアカウントを新規登録
 		public Boolean createAcc(String userId,String pass,String userName,String genre1,String genre2,String genre3) {
 			try (Connection conn = createConnection()) {
 	            // 5.パスワードをハッシュ化する
 	            String hashedPassword = HashGenerator.generateHash(pass);
-	            String sql = "INSERT INTO users (userID, pass, name, genre1, genre2, genre3) VALUES (?, ?, ?, ?, ?, ?)";
+	            String sql = "INSERT INTO account (userID, pass, name, genre1, genre2, genre3) VALUES (?, ?, ?, ?, ?, ?)";
 	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 	                stmt.setString(1, userId);
 	                // 6.ハッシュ化した値を利用

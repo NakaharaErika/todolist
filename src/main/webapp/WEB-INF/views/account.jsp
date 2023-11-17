@@ -18,7 +18,7 @@ contentType="text/html; charset=UTF-8"
 	    <%=message %>
 	<%} %>
 	<!-- ログインフォーム。ユーザーIDとパスワードの入力を行う -->
-	<form action="start" method="account">
+	<form action="account" method="POST">
 		<span><strong>ユーザーID</strong></span>
 	    <input type="text" name="user_id">
 	    <br>
@@ -30,7 +30,7 @@ contentType="text/html; charset=UTF-8"
 	    <br>
 	    <br>
 	    <span><strong>ジャンル登録</strong></span><br>
-	    <span>タスク分類に使うジャンルを一つ以上登録してください（最大3つ）</span>
+	    <span>タスク分類に使うジャンルを一つ以上登録してください（最大3つ）</span><br>
 	    <input type="text" name="genre1">
 	    <input type="text" name="genre2">
 	    <input type="text" name="genre3">
