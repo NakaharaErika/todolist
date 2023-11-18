@@ -22,22 +22,20 @@ public class DestroyServlet extends HttpServlet {
 			request.setAttribute("message", "todoを管理しましょ");
 		}
 		
-		String postId = request.getParameter("id"); // String 型のまま使用
         HttpSession session = request.getSession();
         DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 
         if (loggedInUser != null) {
+
+    		String postId = request.getParameter("id"); // String 型のまま使用
         	service.destroyTodoList(postId);
             request.setAttribute("message", "ID:" + postId + "の削除ができました");
-        } else {
-        	response.sendRedirect("login");
-            request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
-        }
-
-        String view = "/WEB-INF/views/edit.jsp";
-        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
-        dispatcher.forward(request, response);
+   
+	        String view = "/WEB-INF/views/edit.jsp";
+	        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
+	        dispatcher.forward(request, response);
+		} else {
+	    	response.sendRedirect("start");
+	    }
 	}
-
-
 }

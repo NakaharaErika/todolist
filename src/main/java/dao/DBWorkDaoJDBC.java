@@ -25,30 +25,24 @@ public class DBWorkDaoJDBC {
 		return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 	}
 	
-	   //ユーザーが存在しているかどうか確認
-		public DBWork checkAccount(DBWork dbWork, String pass) {
+	   //ログイン時にユーザーが存在しているかどうか確認
+		public DBWork checkAccount(DBWork dbWork, String pass,String sql) {
 			// DBコネクション生成
 			try (Connection connection = createConnection()) {
 				// SQL実行オブジェクト生成
-				PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM account WHERE userID=? AND pass=?");
+				PreparedStatement pstmt = connection.prepareStatement(sql);
 				// SQL パラメータ設定
 				pstmt.setString(1, dbWork.getId());
 				pstmt.setString(2, pass);
 				// SQL実行
 				ResultSet rs = pstmt.executeQuery();
 				if (rs.next()) {
-					String name = rs.getString("name");
+					String name = rs.getString("name");//ユーザーの名前を取得
 					dbWork.setName(name);
-					String no = rs.getString("No");
+					String no = rs.getString("No");//ユーザーの主キーを取得
 					dbWork.setNo(no);
-					String genre1 = rs.getString("genre1");
-					dbWork.setGenre1(genre1);
-					String genre2 = rs.getString("genre2");
-					dbWork.setGenre2(genre2);
-					String genre3 = rs.getString("genre3");
-					dbWork.setGenre3(genre3);
 					
-					return dbWork;
+					return dbWork;//エンティティに値をセット
 				}
 				return null;
 			} catch (ClassNotFoundException | SQLException e) {
@@ -56,10 +50,10 @@ public class DBWorkDaoJDBC {
 			}
 		}
 		
-		// ユーザーIDが既に存在するかどうかをチェックするメソッド
-		public boolean doesUserIdExist(String userId) {
+		// アカウント新規作成時にユーザーIDが既に存在するかどうかをチェック
+		public boolean doesUserIdExist(String userId,String sql) {
 		    try (Connection connection = createConnection()) {
-		        PreparedStatement pstmt = connection.prepareStatement("SELECT COUNT(*) FROM account WHERE userID = ?");
+		        PreparedStatement pstmt = connection.prepareStatement(sql);
 		        pstmt.setString(1, userId);
 		        ResultSet rs = pstmt.executeQuery();
 		        if (rs.next()) {
@@ -73,19 +67,16 @@ public class DBWorkDaoJDBC {
 
 		
 		//ユーザーアカウントを新規登録
-		public Boolean createAcc(String userId,String pass,String userName,String genre1,String genre2,String genre3) {
+		public Boolean createAcc(String userId,String pass,String userName,String sql) {
 			try (Connection conn = createConnection()) {
 	            // 5.パスワードをハッシュ化する
 	            String hashedPassword = HashGenerator.generateHash(pass);
-	            String sql = "INSERT INTO account (userID, pass, name, genre1, genre2, genre3) VALUES (?, ?, ?, ?, ?, ?)";
 	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 	                stmt.setString(1, userId);
 	                // 6.ハッシュ化した値を利用
 	                stmt.setString(2, hashedPassword);
 	                stmt.setString(3, userName);
-	                stmt.setString(4, genre1);
-	                stmt.setString(5, genre2);
-	                stmt.setString(6, genre3);
+	  
 	                stmt.execute();
 
 	                return true;
@@ -222,20 +213,33 @@ public class DBWorkDaoJDBC {
 		}
 		
 		//todoを新しく作成して挿入する
-		public void createTodo(String title,String content,String genre,String priority,String date) {
+		public void createTodo(DBWork dbWork, String title,String content,String genre,String priority,String date) {
 		    try (Connection connection = createConnection()) {
-		        PreparedStatement pstmt = connection.prepareStatement("INSERT INTO todo (title, content, genre, priority, date) VALUES (?,?,?,?,?");
-		        pstmt.setString(1, title);
-		        pstmt.setString(2, content);
-		        pstmt.setString(3, genre);
-		        pstmt.setString(4, priority);
-		        pstmt.setString(5, date);
+		        PreparedStatement pstmt = connection.prepareStatement("INSERT INTO todo (userID, title, content, genre, priority, date) VALUES (?,?,?,?,?,?)");
+		        pstmt.setString(1, dbWork.getNo());
+		        pstmt.setString(2, title);
+		        pstmt.setString(3, content);
+		        pstmt.setString(4, genre);
+		        pstmt.setString(5, priority);
+		        pstmt.setString(6, date);
 		        pstmt.executeUpdate();
 		    } catch (SQLException | ClassNotFoundException e) {
 		        throw new RuntimeException(e);
 		    }
 		}
 
-				
+		//todoを新しく作成して挿入する
+		public void editGenre(DBWork dbWork, String genre1, String genre2, String genre3) {
+		    try (Connection connection = createConnection()) {
+		        PreparedStatement pstmt = connection.prepareStatement("UPDATE todo SET title=?, content=?, genre=?, priority=? WHERE No = ?");
+		        
+		        pstmt.setString(2, title);
+		        pstmt.setString(3, content);
+		        pstmt.setString(1, dbWork.getNo());
+		        pstmt.executeUpdate();
+		    } catch (SQLException | ClassNotFoundException e) {
+		        throw new RuntimeException(e);
+		    }
+		}		
 
 }

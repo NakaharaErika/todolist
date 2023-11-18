@@ -40,7 +40,7 @@ contentType="text/html; charset=UTF-8"
 	    <br>
 	<% } %>
 
-	
+	<p><a href='editGenre'>ジャンルの編集</a><p>
 	<br>
 	<form action="sort" method = "POST">
 	<p>todoリストの並び順を指定してください</p>

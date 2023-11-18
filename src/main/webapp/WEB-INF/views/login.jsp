@@ -21,8 +21,10 @@ contentType="text/html; charset=UTF-8"
 	<form action="start" method="post">
 		<span><strong>ユーザーID</strong></span>
 	    <input type="text" name="user_id">
+	    <br>
 	    <span><strong>パスワード</strong></span>
 	    <input type="password" name="password">
+	    <br>
 	    <br>
 	    <input type="submit" value="ログイン">
 	</form>

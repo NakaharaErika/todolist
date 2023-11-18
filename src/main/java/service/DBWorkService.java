@@ -11,25 +11,17 @@ public class DBWorkService {
 
 	DBWorkDaoJDBC dao = new DBWorkDaoJDBC();
 
-	public DBWork login(String id,String pass) {
+	private String checkUserSQL = "SELECT * FROM account WHERE userID=? AND pass=?";
+
+    public DBWork login(String id,String pass) {
 		try {
 	        String hashedPassword = HashGenerator.generateHash(pass);
 	        DBWork dbWork = new DBWork(id);
-	        return dao.checkAccount(dbWork,hashedPassword);
+	        return dao.checkAccount(dbWork,hashedPassword,checkUserSQL);
 	    } catch (NoSuchAlgorithmException e) {
 	        e.printStackTrace();
 	        throw new RuntimeException(e);
 	    }
-	}
-	
-	public Boolean createAccount(String userId, String password, String userName, String genre1, String genre2, String genre3) {
-	    // ユーザーIDが既に存在するかどうかをチェック
-	    if (!dao.doesUserIdExist(userId)) {
-	        // 存在しない場合は新規アカウントを作成
-	        return dao.createAcc(userId, password, userName, genre1, genre2, genre3);
-	    }
-	    // 存在する場合は false を返す
-	    return false;
 	}
 	
 	public List<HashMap<String, String>> getTodoListByUserId(String no) {
@@ -56,8 +48,12 @@ public class DBWorkService {
 		dao.destroyTodo(todoNo);
 	}
 	
-	public void createTodoList(String title,String content,String genre,String priority,String date) {
-		dao.createTodo(title,content,genre,priority,date);
+	public void createTodoList(DBWork dbWork, String title,String content,String genre,String priority,String date) {
+		dao.createTodo(dbWork, title,content,genre,priority,date);
+	}
+	
+	public void editGenreList(DBWork dbWork, String genre1,String genre2,String genre3) {
+		dao.editGenre(dbWork,genre1,genre2,genre3);
 	}
 
 }

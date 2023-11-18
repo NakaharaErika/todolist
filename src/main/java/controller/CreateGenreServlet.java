@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import service.DBWorkService;
 
-@WebServlet("/update")
-public class UpdateServlet extends HttpServlet {
+@WebServlet("/createGenre")
+public class CreateGenreServlet extends HttpServlet {
 	
 	private DBWorkService service = new DBWorkService();
 	
@@ -28,20 +28,18 @@ public class UpdateServlet extends HttpServlet {
 				request.setAttribute("message", "todoを管理しましょ");
 			}
 		
-		String postId = request.getParameter("id"); 
-		String title = request.getParameter("title"); 
-		String content = request.getParameter("content"); 
-		String genre = request.getParameter("genre"); 
-		String priority = request.getParameter("priority"); 
-	
+		String genre1 = request.getParameter("genre1"); 
+		String genre2 = request.getParameter("genre2"); 
+		String genre3 = request.getParameter("genre3"); 
 		
-            service.updateTodoList(postId,title,content,genre,priority);
-            request.setAttribute("message", "ID:" + postId + "の更新ができました");
+            service.editGenreList(loggedInUser,genre1,genre2,genre3);
+            request.setAttribute("message", "ジャンル編成を更新しました");
        
-        String forward = "show?id=" + postId;
-		RequestDispatcher dispatcher = request.getRequestDispatcher(forward);
-		dispatcher.forward(request, response);
-		} else {
+            String view = "/WEB-INF/views/edit.jsp";
+	        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
+	        dispatcher.forward(request, response);
+		
+        } else {
 	    	response.sendRedirect("start");
 	    }
 	}

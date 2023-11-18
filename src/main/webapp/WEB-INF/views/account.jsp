@@ -27,14 +27,6 @@ contentType="text/html; charset=UTF-8"
 	    <br>
 	    <span><strong>ユーザー名</strong></span>
 	    <input type="text" name="name">
-	    <br>
-	    <br>
-	    <span><strong>ジャンル登録</strong></span><br>
-	    <span>タスク分類に使うジャンルを一つ以上登録してください（最大3つ）</span><br>
-	    <input type="text" name="genre1">
-	    <input type="text" name="genre2">
-	    <input type="text" name="genre3">
-		
 		<br>
 		<br>    
 	    <input type="submit" value="新規登録">

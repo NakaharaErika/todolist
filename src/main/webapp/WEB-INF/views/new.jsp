@@ -31,12 +31,6 @@ contentType="text/html; charset=UTF-8"
 		<input type="date" name="date"><br>
 		
 	
-	<% HashMap<String, String> todoDetails = (HashMap<String, String>) request.getAttribute("todoDetails"); %>
-	<% String priority = todoDetails.get("priority"); %>
-	
-	
-    <% if (todoDetails != null) { %>
-    	<% String selectedGenre = todoDetails.get("genre"); %>
 			<label for="genre">ジャンル</label><br>
 			<select name="genre" id="genre">
 			    <% if (loggedInUser.getGenre1() != null) { %>
@@ -58,8 +52,7 @@ contentType="text/html; charset=UTF-8"
 		    <input type="radio" name="priority" value="<%= prioritylist.get("id") %>"> <%= prioritylist.get("priorityLevel") %>
 		<% } %>
 		<br>
-	
-	 <% } %>
+
 		
 		
 		<button type="submit">保存する</button>

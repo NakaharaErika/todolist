@@ -20,23 +20,24 @@ public class SortServlet extends HttpServlet {
 	private DBWorkService service = new DBWorkService(); 
 	 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String item = request.getParameter("items");
-		String sort = request.getParameter("sort");
 		
 		HttpSession session = request.getSession();
 		DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 		
 		if (loggedInUser != null) {
+			String item = request.getParameter("items");
+			String sort = request.getParameter("sort");
+			
+			
 	        List<HashMap<String, String>> todos = service.getTodoListBySort(loggedInUser.getNo(), item, sort);
 	        request.setAttribute("rows", todos);
 	        request.setAttribute("message", sortItem(item) + " 順に " + sortStr(sort) + " で並べ替えました");
-	    } else {
-	        // セッションにユーザー情報がない場合の処理
-	        request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
+			String view = "/WEB-INF/views/list.jsp";
+	        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
+			dispatcher.forward(request, response);
+		} else {
+	    	response.sendRedirect("start");
 	    }
-		String view = "/WEB-INF/views/list.jsp";
-        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
-		dispatcher.forward(request, response);
 	}
 	
 	
