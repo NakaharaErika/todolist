@@ -28,9 +28,10 @@ public class EditServlet extends HttpServlet {
         	if (request.getAttribute("message") == null) {
     			request.setAttribute("message", "todoを管理しましょ");
     		}
-        	String postId = request.getParameter("id"); // String 型のまま使用
         	
-            HashMap<String, String> todoDetails = service.getTodoListByNo(postId); // 型変換は不要
+        	String postId = request.getParameter("id");
+        	//todoのID（主キー）に紐づくtodoの詳細を取得
+            HashMap<String, String> todoDetails = service.getTodoListByNo(postId);
             request.setAttribute("todoDetails", todoDetails);
             
             List<HashMap<String, String>> priorities = service.getListPriorities();

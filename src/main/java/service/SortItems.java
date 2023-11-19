@@ -7,9 +7,9 @@ import dao.DBWorkDaoJDBC;
 
 public class SortItems{
 	private DBWorkDaoJDBC dao = new DBWorkDaoJDBC();
-	
-	public List<HashMap<String, String>> getTodoListBySort(String no, String item, String sort) {
-		String sortSQL = "SELECT * FROM todo INNER JOIN priority ON todo.priority = priority.id WHERE userID = ? ORDER BY " + item + " " + sort;
+
+	public List<HashMap<String, String>> getTodoListBySort(String no, String item, String sortItem) {
+		String sortSQL = "SELECT * FROM todo INNER JOIN priority ON todo.priority = priority.id WHERE userID = ? ORDER BY " + item + " " + sortItem;
 	    return dao.getTodosBySort(no,sortSQL);
 	}
 }

@@ -28,11 +28,11 @@ public class SortServlet extends HttpServlet {
 		
 		if (loggedInUser != null) {
 			String item = request.getParameter("items");
-			String sort = request.getParameter("sort");
-			
-	        List<HashMap<String, String>> todos = sort.getTodoListBySort(loggedInUser.getNo(), item, sort);
+			String sortItem = request.getParameter("sort");
+			//項目と並べ替え順を受け取ってリストに挿入
+	        List<HashMap<String, String>> todos = sort.getTodoListBySort(loggedInUser.getNo(), item, sortItem);
 	        request.setAttribute("rows", todos);
-	        request.setAttribute("message", sortItem(item) + " 順に " + sortStr(sort) + " で並べ替えました");
+	        request.setAttribute("message", sortItem(item) + " 順に " + sortStr(sortItem) + " で並べ替えました");
 			
 	        String view = "/WEB-INF/views/list.jsp";
 	        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
