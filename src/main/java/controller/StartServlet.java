@@ -35,7 +35,7 @@ public class StartServlet extends HttpServlet {
 	    //ユーザーIDが存在するかチェック
 	    if(service.checkUserIDExist(userId)) {
 	    	//アカウントがロックされていないかチェック
-	    	if(!check.isAccountLocked(userId));
+	    	if(!check.isAccountLocked(userId)){
 		    	//パスワードが一致しているかチェック
 		    	DBWork dbWork = service.login(userId, password);//DBWorkクラスにuserId,name,No(主キー）をセット
 		    	if(dbWork != null) {//ログイン成功
@@ -52,9 +52,9 @@ public class StartServlet extends HttpServlet {
 		    		request.setAttribute("message", falseMessage);
 		    		view = "/WEB-INF/views/login.jsp";
 		    	}
-	    	}else {
+	    	} else {
 	    		//ロックされていたらエラーメッセージを表示
-	    		String falseMessage = "このアカウントはロックされています";
+	    		request.setAttribute("message", "このアカウントはロックされています");
 	    		view = "/WEB-INF/views/login.jsp";
 	    	}
 	    } else {

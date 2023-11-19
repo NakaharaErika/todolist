@@ -143,6 +143,23 @@ public class DBWorkDaoJDBC {
 			}
 		}
 		
+		//パスワードを変更
+		public  void resetPass(String userId, String pass, String sql) {
+			try (Connection conn = createConnection()) {
+				// 5.パスワードをハッシュ化する
+	            String hashedPassword = HashGenerator.generateHash(pass);
+	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	                stmt.setString(1, hashedPassword);
+	                stmt.setString(2, userId);
+	                stmt.executeUpdate();
+			    } catch (SQLException e) {
+			        throw new RuntimeException(e);
+			    }
+			} catch (ClassNotFoundException | NoSuchAlgorithmException | SQLException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
 		//todoテーブルから該当ユーザーのデータリストを取得
 		public List<HashMap<String,String>> getTodosByUserId(String no,String sql) {
 			List<HashMap<String,String>> rows = new ArrayList<>();
@@ -172,10 +189,9 @@ public class DBWorkDaoJDBC {
 		}
 		
 		//todoテーブルからソート内容に沿って該当ユーザーのデータリストを取得
-		public List<HashMap<String,String>> getTodosBySort(String no, String item, String sort) {
+		public List<HashMap<String,String>> getTodosBySort(String no, String sql) {
 			List<HashMap<String,String>> rows = new ArrayList<>();
 			try(Connection connection = createConnection()) {
-				String sql = "SELECT * FROM todo INNER JOIN priority ON todo.priority = priority.id WHERE userID = ? ORDER BY " + item + " " + sort;
 		        PreparedStatement pstmt = connection.prepareStatement(sql);
 		        pstmt.setString(1, no);
 		        ResultSet rs = pstmt.executeQuery();

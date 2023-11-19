@@ -13,12 +13,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import service.DBWorkService;
+import service.SortItems;
 
 @WebServlet("/sort")
 public class SortServlet extends HttpServlet {
 	
-	private DBWorkService service = new DBWorkService(); 
-	 
+	DBWorkService service = new DBWorkService(); 
+	SortItems sort = new SortItems();
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
@@ -28,11 +30,11 @@ public class SortServlet extends HttpServlet {
 			String item = request.getParameter("items");
 			String sort = request.getParameter("sort");
 			
-			
-	        List<HashMap<String, String>> todos = service.getTodoListBySort(loggedInUser.getNo(), item, sort);
+	        List<HashMap<String, String>> todos = sort.getTodoListBySort(loggedInUser.getNo(), item, sort);
 	        request.setAttribute("rows", todos);
 	        request.setAttribute("message", sortItem(item) + " 順に " + sortStr(sort) + " で並べ替えました");
-			String view = "/WEB-INF/views/list.jsp";
+			
+	        String view = "/WEB-INF/views/list.jsp";
 	        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
 			dispatcher.forward(request, response);
 		} else {

@@ -36,9 +36,7 @@ public class DBWorkService {
 	
 	
 
-	public List<HashMap<String, String>> getTodoListBySort(String no, String item, String sort) {
-	    return dao.getTodosBySort(no,item,sort);
-	}
+	
 	
 	public HashMap<String, String> getTodoListByNo(String todoNo) {
 		return dao.getTodoByNo(todoNo);
