@@ -39,26 +39,24 @@ contentType="text/html; charset=UTF-8"
 </head>
 <body>
 	<h1>ジャンル</h1>
-	<% DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser"); %>
+	<% DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
+	   List<Genre> userGnres = (List<Genre>) request.getAttribute("uuserGeres"); %>
+	   
 			<% if (loggedInUser != null) { %>
 			    <p><%= loggedInUser.getName() %>さん</p>
 			<% } %>
+	
 	<p><%= request.getAttribute("message") %></p>
 	
 		<form action="createGenre" method="get" onsubmit="return confirmUpdate()">
 			<strong>新しいジャンル構成</strong>
 			<strong>現在のジャンル構成</strong><br>
 			
-				<input type="text" name="genre1" value="<%= loggedInUser.getGenre1() != null ? loggedInUser.getGenre1() : "" %>">
-				<label><%= loggedInUser.getGenre1() != null ? loggedInUser.getGenre1() : "-" %></label>
-				<br>
-				<input type="text" name="genre2" value="<%= loggedInUser.getGenre2() != null ? loggedInUser.getGenre2() : "" %>">
-				<label><%= loggedInUser.getGenre2() != null ? loggedInUser.getGenre2() : "-" %></label>
-				<br>
-				<input type="text" name="genre3" value="<%= loggedInUser.getGenre3() != null ? loggedInUser.getGenre3() : "" %>">
-				<label><%= loggedInUser.getGenre3() != null ? loggedInUser.getGenre3() : "-" %></label>
-				<br>
-		<br>
+				<% for(int i = 0; i < userGenres.size();; i++){ %>
+					<input type="text" name="genre<%= i+1 %>" value="<%= userGenres.get(i).getGenreName() %>">
+					<label><%= userGenres.get(i).getGenreName() %></label> 
+					<br>
+				<% } %>
 		<button type="submit">保存する</button>
 		<a href='list'>キャンセル</a>
 	</form>
