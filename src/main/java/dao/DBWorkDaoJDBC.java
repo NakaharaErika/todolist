@@ -87,8 +87,8 @@ public class DBWorkDaoJDBC {
 		}
 		
 		//ユーザーの認証ミスの回数を確認
-		public  HashMap<String, Int> CheckFalseCnt(String userId,String sql) {
-			HashMap<String, Int> checkFlg = new HashMap<>();
+		public  HashMap<String, Integer> CheckFalseCnt(String userId,String sql) {
+			HashMap<String, Integer> checkFlg = new HashMap<>();
 			try (Connection conn = createConnection()) {
 	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 	                stmt.setString(1, userId);
@@ -96,10 +96,33 @@ public class DBWorkDaoJDBC {
 	                if (rs.next()) {
 			            checkFlg.put("flg", rs.getInt("falsecnt"));
 	                }
-	                return rs;
-	            }
-			} catch (ClassNotFoundException | NoSuchAlgorithmException | SQLException e) {
-				throw new RuntimeException(e);
+			    } catch (SQLException e) {
+			        throw new RuntimeException(e);
+			    }
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			return checkFlg;
+		}
+		
+		//ユーザーの認証ミスの回数を確認
+		public  void UpFalseCnt(String userId,String sql) {
+			HashMap<String, Integer> checkFlg = new HashMap<>();
+			try (Connection conn = createConnection()) {
+	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	                stmt.setString(1, userId);
+	                stmt.executeUpdate();
+			    } catch (SQLException e) {
+			        throw new RuntimeException(e);
+			    }
+			} catch (ClassNotFoundException e1) {
+				// TODO 自動生成された catch ブロック
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// TODO 自動生成された catch ブロック
+				e1.printStackTrace();
 			}
 		}
 		

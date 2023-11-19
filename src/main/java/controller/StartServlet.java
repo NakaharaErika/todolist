@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import service.CheckFalseCount;
 import service.DBWorkService;
 
 @WebServlet("/start")
@@ -43,7 +44,7 @@ public class StartServlet extends HttpServlet {
 	    } else {
 	        // ログイン失敗
 	    	//accountテーブルの失敗カウントを調べる
-	    	String falseMessage = (check.createAccount())? "IDかパスワードが異なります":"３回間違えたのでロックしました"
+	    	String falseMessage = (check.checkFalsecnt(userId))? "IDかパスワードが異なります":"３回間違えたのでロックしました";
 	    	
 	        request.setAttribute("message", falseMessage);
 	        view = "/WEB-INF/views/login.jsp";

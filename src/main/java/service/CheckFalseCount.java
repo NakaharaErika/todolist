@@ -11,8 +11,9 @@ public class CheckFalseCount{
     private String falsecountSQL = "UPDATE account SET falsecnt = falsecnt + 1 WHERE id = 1";
 
     public Boolean checkFalsecnt(String userId) {
-    	HashMap<String, Integer> check = new HashMap<String, Integer>(dao.CheckFalseCnt(userId, checkfalseSQL));
-        if (check < 3) {
+    	HashMap<String, Integer> check = dao.CheckFalseCnt(userId, checkfalseSQL);
+    	int falseCount = check.getOrDefault("flg", 0);
+        if (falseCount < 3) {
             dao.UpFalseCnt(userId, falsecountSQL);
             return true;
         }

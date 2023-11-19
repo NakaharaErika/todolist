@@ -10,14 +10,24 @@ import entity.DBWork;
 public class DBWorkService {
 
 	DBWorkDaoJDBC dao = new DBWorkDaoJDBC();
-
-	private String checkUserSQL = "SELECT * FROM account WHERE userID=? AND pass=?";
-
+	
+	private String checkUserIdSQL = "SELECT COUNT(*) FROM account WHERE userID = ?";
+	private String checkUserPassSQL = "SELECT * FROM account WHERE userID=? AND pass=?";
+	
+	//ユーザーIDが既に登録されているか調べる
+	public Boolean checkUserIDExist(String userId) {
+        if (dao.doesUserIdExist(userId, checkUserIdSQL)) {
+            return true;
+        }
+        return false;
+    }
+	
+	//パスワードが一致しているか調べる
     public DBWork login(String id,String pass) {
 		try {
 	        String hashedPassword = HashGenerator.generateHash(pass);
 	        DBWork dbWork = new DBWork(id);
-	        return dao.checkAccount(dbWork,hashedPassword,checkUserSQL);
+	        return dao.checkAccount(dbWork,hashedPassword,checkUserPassSQL);
 	    } catch (NoSuchAlgorithmException e) {
 	        e.printStackTrace();
 	        throw new RuntimeException(e);
