@@ -23,6 +23,7 @@ public class GenreServlet extends HttpServlet {
         	if (request.getAttribute("message") == null) {
     			request.setAttribute("message", "todoを管理しましょ");
     		}
+        	//ここでloggedInUserがtodoリスト内で保持しているジャンル一覧を取得したい
         	
             String view = "/WEB-INF/views/genre.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(view);
