@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import service.DBWorkService;
 
 @WebServlet("/create")
-public class CreateServlet extends HttpServlet {
+public class CreateTodoServlet extends HttpServlet {
 	
 	private DBWorkService service = new DBWorkService();
 	

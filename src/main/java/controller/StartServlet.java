@@ -31,23 +31,29 @@ public class StartServlet extends HttpServlet {
 	    // ユーザーから送信されたユーザーIDとパスワードを取得する。
 	    String userId = request.getParameter("user_id");
 	    String password = request.getParameter("password");
-	
-	    DBWork dbWork = service.login(userId, password);//DBWorkクラスにuserId,name,No(主キー）をセット
-	    String view;
-	    if (dbWork != null) {
-	        // ログイン成功
-	    	//セッション情報を保持
-	    	HttpSession session = request.getSession();//パスワード以外の情報をセッションとして保持
-	        session.setAttribute("loggedInUser", dbWork);
-	    	
-	        view = "/list";
+	    String view = null;
+	    //ユーザーIDが存在するかチェック
+	    if(service.checkUserIDExist(userId)) {
+	    	//パスワードが一致しているかチェック
+	    	DBWork dbWork = service.login(userId, password);//DBWorkクラスにuserId,name,No(主キー）をセット
+	    	if(dbWork != null) {
+	    		//パスワードが一致していたら、フラグを０に戻してdbWrokに値を設定
+		    	check.countReset(userId);
+		    	HttpSession session = request.getSession();//パスワード以外の情報をセッションとして保持
+		        session.setAttribute("loggedInUser", dbWork);
+		    	
+		        view = "/list";
+	    	} else {
+	    		boolean canRetry = check.checkFalsecnt(userId);
+	    		//一致していなかったら失敗カウントを調べる
+	    		String falseMessage = canRetry? "IDかパスワードが異なります":"３回間違えたのでロックしました";
+	    		request.setAttribute("message", falseMessage);
+	    		view = "/WEB-INF/views/login.jsp";
+	    	}	
 	    } else {
-	        // ログイン失敗
-	    	//accountテーブルの失敗カウントを調べる
-	    	String falseMessage = (check.checkFalsecnt(userId))? "IDかパスワードが異なります":"３回間違えたのでロックしました";
-	    	
+	    	//IDが存在しない場合
+	    	String falseMessage = "IDが存在しません";
 	        request.setAttribute("message", falseMessage);
-	        view = "/WEB-INF/views/login.jsp";
 	    }
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view);

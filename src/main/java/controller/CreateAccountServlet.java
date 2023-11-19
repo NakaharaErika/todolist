@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import service.CreateAccount;
 
 @WebServlet("/account")
-public class AccountServlet extends HttpServlet {
+public class CreateAccountServlet extends HttpServlet {
     
     CreateAccount createaccount = new CreateAccount();
     

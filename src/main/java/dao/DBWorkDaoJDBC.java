@@ -50,7 +50,7 @@ public class DBWorkDaoJDBC {
 			}
 		}
 		
-		// アカウント新規作成時にユーザーIDが既に存在するかどうかをチェック
+		//　ユーザーIDが既に存在するかどうかをチェック
 		public boolean doesUserIdExist(String userId,String sql) {
 		    try (Connection connection = createConnection()) {
 		        PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -86,7 +86,7 @@ public class DBWorkDaoJDBC {
 			}
 		}
 		
-		//ユーザーの認証ミスの回数を確認
+		//ユーザーの認証ミスの回数(失敗カウント）を確認
 		public  HashMap<String, Integer> CheckFalseCnt(String userId,String sql) {
 			HashMap<String, Integer> checkFlg = new HashMap<>();
 			try (Connection conn = createConnection()) {
@@ -107,9 +107,26 @@ public class DBWorkDaoJDBC {
 			return checkFlg;
 		}
 		
-		//ユーザーの認証ミスの回数を確認
+		//ユーザーの認証ミスが起きた場合、失敗カウントのカウントアップを実施
 		public  void UpFalseCnt(String userId,String sql) {
-			HashMap<String, Integer> checkFlg = new HashMap<>();
+			try (Connection conn = createConnection()) {
+	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	                stmt.setString(1, userId);
+	                stmt.executeUpdate();
+			    } catch (SQLException e) {
+			        throw new RuntimeException(e);
+			    }
+			} catch (ClassNotFoundException e1) {
+				// TODO 自動生成された catch ブロック
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// TODO 自動生成された catch ブロック
+				e1.printStackTrace();
+			}
+		}
+		
+		//ログイン認証に成功した場合、失敗カウントをリセット
+		public  void CountReset(String userId,String sql) {
 			try (Connection conn = createConnection()) {
 	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 	                stmt.setString(1, userId);

@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import service.DBWorkService;
 
 @WebServlet("/startAcc")
-public class StartAccServlet extends HttpServlet {
+public class AccServlet extends HttpServlet {
 	
 	DBWorkService service = new DBWorkService();
 	
