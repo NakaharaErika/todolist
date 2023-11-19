@@ -34,26 +34,34 @@ public class StartServlet extends HttpServlet {
 	    String view = null;
 	    //ユーザーIDが存在するかチェック
 	    if(service.checkUserIDExist(userId)) {
-	    	//パスワードが一致しているかチェック
-	    	DBWork dbWork = service.login(userId, password);//DBWorkクラスにuserId,name,No(主キー）をセット
-	    	if(dbWork != null) {
-	    		//パスワードが一致していたら、フラグを０に戻してdbWrokに値を設定
-		    	check.countReset(userId);
-		    	HttpSession session = request.getSession();//パスワード以外の情報をセッションとして保持
-		        session.setAttribute("loggedInUser", dbWork);
-		    	
-		        view = "/list";
-	    	} else {
-	    		boolean canRetry = check.checkFalsecnt(userId);
-	    		//一致していなかったら失敗カウントを調べる
-	    		String falseMessage = canRetry? "IDかパスワードが異なります":"３回間違えたのでロックしました";
-	    		request.setAttribute("message", falseMessage);
+	    	//アカウントがロックされていないかチェック
+	    	if(!check.isAccountLocked(userId));
+		    	//パスワードが一致しているかチェック
+		    	DBWork dbWork = service.login(userId, password);//DBWorkクラスにuserId,name,No(主キー）をセット
+		    	if(dbWork != null) {//ログイン成功
+		    		//パスワードが一致していたら、フラグを０に戻してdbWrokに値を設定
+			    	check.countReset(userId);
+			    	HttpSession session = request.getSession();//パスワード以外の情報をセッションとして保持
+			        session.setAttribute("loggedInUser", dbWork);
+			        
+			        view = "/list";
+		    	} else {//ログイン失敗
+		    		//一致していなかったら失敗カウントを調べる
+		    		boolean canRetry = check.incrementFalseCnt(userId);
+		    		String falseMessage = canRetry? "IDかパスワードが異なります":"３回間違えたのでロックしました";
+		    		request.setAttribute("message", falseMessage);
+		    		view = "/WEB-INF/views/login.jsp";
+		    	}
+	    	}else {
+	    		//ロックされていたらエラーメッセージを表示
+	    		String falseMessage = "このアカウントはロックされています";
 	    		view = "/WEB-INF/views/login.jsp";
-	    	}	
+	    	}
 	    } else {
 	    	//IDが存在しない場合
 	    	String falseMessage = "IDが存在しません";
-	        request.setAttribute("message", falseMessage);
+	    	request.setAttribute("message", falseMessage);
+	        view = "/WEB-INF/views/login.jsp";
 	    }
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view);
