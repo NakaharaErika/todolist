@@ -9,59 +9,74 @@ contentType="text/html; charset=UTF-8"
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   <title>Todoリスト</title>
 </head>
 <body>
-	<h1>Todoリスト</h1>
-		<% DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser"); %>
-			<% if (loggedInUser != null) { %>
-			    <p>ようこそ、<%= loggedInUser.getName() %>さん</p>
-			<% } %>
-
+	<header>
+	    <h1>Todoリスト</h1>
+	    
+	    <% DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser"); %>
+				<% if (loggedInUser != null) { %>
+				    <p>ようこそ、<%= loggedInUser.getName() %>さん</p>
+				<% } %>
+	    <nav class="pc-nav">
+	    	<form action="logout" method="POST"><input type="submit" value="ログアウト"></form>
+	    </nav>
+	</header>
+	<p><a href='new'>新規作成</a><p>		
+	<form action="sort" method = "POST">
+		<p>todoリストの並び順を指定してください</p>
+		<select name = "items">
+			<option selected value = "#">項目</option> 
+			<option value = "id">id</option>
+			<option value = "date">登録日</option>
+			<option value = "genre">ジャンル</option>
+			<option value = "priority">優先度</option>
+		</select>
+		<select name = "sort">
+			<option selected value = "#">並び替え順</option> 
+			<option value = "asc">昇順</option>
+			<option value = "desc">降順</option>
+		</select>
+		<input type = "submit" value = "実行">
+		<br>
+	</form>	
 	<br>
-		<% String message = (String) request.getAttribute("message"); %>
+	<hr>
+	<% String message = (String) request.getAttribute("message"); %>
 			<% if (message != null) { %>
 			    <p><%= message %></p>
 			<% } %>
-	<span><strong>ID</strong></span>
-	<span><strong>タイトル</strong></span>
-	<span><strong>ジャンル</strong></span>
-	<span><strong>登録日</strong></span>
-	<span><strong>優先度</strong></span><br>
 	
-	<% ArrayList<HashMap<String, String>> rows = (ArrayList<HashMap<String, String>>)request.getAttribute("rows"); %>
-	<% int counter = 1; %>
-	<% for(HashMap<String,String> columns : rows){ %>
-	    <span><%= counter++ %></span>
-	    <span><a href='show?id=<%= columns.get("No") %>'><%= columns.get("title") %></a></span>
-	    <span><%= columns.get("genre") %></span>
-	    <span><%= columns.get("date") %></span>
-	    <span><%= columns.get("priority") %></span>
-	    <br>
-	<% } %>
-
+	<table class="table">
+		<thead>
+			<tr>
+			 <th scope="col">ID</th>
+			 <th scope="col">タイトル</th>
+			 <th scope="col">ジャンル</th>
+			 <th scope="col">登録日</th>
+			 <th scope="col">優先度</th>
+		</thead>
+		<tbody>	
+			<% ArrayList<HashMap<String, String>> rows = (ArrayList<HashMap<String, String>>)request.getAttribute("rows"); %>
+			<% int counter = 1; %>
+			<% for(HashMap<String,String> columns : rows){ %>
+			<tr>
+			    <th scope="row"><%= counter++ %></th>
+			    <td><a href='show?id=<%= columns.get("No") %>'><%= columns.get("title") %></a></td>
+			    <td><%= columns.get("genre") %></td>
+			    <td><%= columns.get("date") %></td>
+			    <td><%= columns.get("priority") %></td>
+			 <tr>
+			<% } %>
+		</tbody>
+	</table>
+	
+	<br>
 	<p><a href='editGenre'>ジャンルの編集</a><p>
 	<br>
-	<form action="sort" method = "POST">
-	<p>todoリストの並び順を指定してください</p>
-	<select name = "items">
-		<option selected value = "#">項目</option> 
-		<option value = "id">id</option>
-		<option value = "date">登録日</option>
-		<option value = "genre">ジャンル</option>
-		<option value = "priority">優先度</option>
-	</select>
-	<select name = "sort">
-		<option selected value = "#">並び替え順</option> 
-		<option value = "asc">昇順</option>
-		<option value = "desc">降順</option>
-	</select>
-	<input type = "submit" value = "実行">
-
-	<br>
-	<p><a href='new'>新規作成</a><p>
-	<br>
-	<input type="submit" value="ログアウト">
-</form>	
+	
 </body>
 </html>

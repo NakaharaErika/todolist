@@ -24,9 +24,7 @@ public class DBWorkService {
 	    }
 	}
 	
-	public List<HashMap<String, String>> getTodoListByUserId(String no) {
-	    return dao.getTodosByUserId(no);
-	}
+	
 
 	public List<HashMap<String, String>> getTodoListBySort(String no, String item, String sort) {
 	    return dao.getTodosBySort(no,item,sort);

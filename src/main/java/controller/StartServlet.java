@@ -16,6 +16,7 @@ import service.DBWorkService;
 public class StartServlet extends HttpServlet {
 	
 	DBWorkService service = new DBWorkService();
+	CheckFalseCount check = new CheckFalseCount();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//ログイン画面を表示
@@ -30,18 +31,21 @@ public class StartServlet extends HttpServlet {
 	    String userId = request.getParameter("user_id");
 	    String password = request.getParameter("password");
 	
-	    DBWork dbWork = service.login(userId, password);
+	    DBWork dbWork = service.login(userId, password);//DBWorkクラスにuserId,name,No(主キー）をセット
 	    String view;
 	    if (dbWork != null) {
 	        // ログイン成功
 	    	//セッション情報を保持
-	    	HttpSession session = request.getSession();
+	    	HttpSession session = request.getSession();//パスワード以外の情報をセッションとして保持
 	        session.setAttribute("loggedInUser", dbWork);
 	    	
 	        view = "/list";
 	    } else {
 	        // ログイン失敗
-	        request.setAttribute("message", "IDかパスワードが異なります");
+	    	//accountテーブルの失敗カウントを調べる
+	    	String falseMessage = (check.createAccount())? "IDかパスワードが異なります":"３回間違えたのでロックしました"
+	    	
+	        request.setAttribute("message", falseMessage);
 	        view = "/WEB-INF/views/login.jsp";
 	    }
 		

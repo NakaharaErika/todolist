@@ -12,23 +12,23 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import service.DBWorkService;
+import service.GetTodoListByUserId;
 
 @WebServlet("/list")
 public class ListServlet extends HttpServlet {
 	
-	DBWorkService service = new DBWorkService();
+	GetTodoListByUserId list = new GetTodoListByUserId();
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		 HttpSession session = request.getSession();
 	     DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 	 if (loggedInUser != null) {
 	    	//ユーザーのtodoリストを格納
-	    	List<HashMap<String, String>> todos = service.getTodoListByUserId(loggedInUser.getNo());
+	    	List<HashMap<String, String>> todos = list.getTodoListByUserId(loggedInUser.getNo());
 	        request.setAttribute("rows", todos);
 	 } else {
 		response.sendRedirect("login");
-        request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
     }
 	 	
 	    String view = "/WEB-INF/views/list.jsp";
@@ -40,15 +40,15 @@ public class ListServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		
 		 HttpSession session = request.getSession();
 	     DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 	 if (loggedInUser != null) {
 	    	//ユーザーのtodoリストを格納
-	    	List<HashMap<String, String>> todos = service.getTodoListByUserId(loggedInUser.getNo());
+	    	List<HashMap<String, String>> todos = list.getTodoListByUserId(loggedInUser.getNo());
 	        request.setAttribute("rows", todos);
 	 } else {
-		 response.sendRedirect("login");
-         request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
+		response.sendRedirect("login");
      }
 	 	
 	    String view = "/WEB-INF/views/list.jsp";
@@ -56,4 +56,5 @@ public class ListServlet extends HttpServlet {
 		dispatcher.forward(request, response);
 	    
 	}
+	
 }

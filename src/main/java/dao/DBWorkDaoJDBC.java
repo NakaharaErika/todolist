@@ -86,12 +86,28 @@ public class DBWorkDaoJDBC {
 			}
 		}
 		
+		//ユーザーの認証ミスの回数を確認
+		public  HashMap<String, Int> CheckFalseCnt(String userId,String sql) {
+			HashMap<String, Int> checkFlg = new HashMap<>();
+			try (Connection conn = createConnection()) {
+	            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	                stmt.setString(1, userId);
+	                ResultSet rs = stmt.executeQuery();
+	                if (rs.next()) {
+			            checkFlg.put("flg", rs.getInt("falsecnt"));
+	                }
+	                return rs;
+	            }
+			} catch (ClassNotFoundException | NoSuchAlgorithmException | SQLException e) {
+				throw new RuntimeException(e);
+			}
+		}
 		
 		//todoテーブルから該当ユーザーのデータリストを取得
-		public List<HashMap<String,String>> getTodosByUserId(String no) {
+		public List<HashMap<String,String>> getTodosByUserId(String no,String sql) {
 			List<HashMap<String,String>> rows = new ArrayList<>();
 			try(Connection connection = createConnection()) {
-				PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM todo INNER JOIN priority ON todo.priority = priority.id WHERE todo.userID=?");
+				PreparedStatement pstmt = connection.prepareStatement(sql);
 				pstmt.setString(1,no);
 				ResultSet rs = pstmt.executeQuery();
 				
@@ -110,7 +126,6 @@ public class DBWorkDaoJDBC {
 			} catch (SQLException e) {
 		        throw new RuntimeException(e);
 		    } catch (ClassNotFoundException e1) {
-				// TODO 自動生成された catch ブロック
 				e1.printStackTrace();
 			}
 		    return rows;
