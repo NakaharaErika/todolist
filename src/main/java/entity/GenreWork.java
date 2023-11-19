@@ -5,6 +5,9 @@ public class GenreWork {
 	private int genreId;
 	/** ジャンル名 */
 	private String genreName;
+	/** ジャンル保有者名 */
+	private int ownerId;
+	
 	
 	/**
 	 * コンストラクタ
@@ -13,9 +16,9 @@ public class GenreWork {
 	}
 
 	
-	public GenreWork(int genreId,String genreName) {
-		this.genreId = genreId;
-		this.genreName = genreName;
+	public GenreWork(int ownerId) {
+		this.ownerId = ownerId;
+		
 	}
 	
 	
@@ -33,5 +36,13 @@ public class GenreWork {
 	}
 	public void setGenreName(String genreName) {
 		this.genreName = genreName;
+	}
+	
+	/**オーナー名のゲッターとセッター*/
+	public int getOwnerId() {
+		return ownerId;
+	}
+	public void setOwnerId(int ownerId) {
+		this.ownerId = ownerId;
 	}
 }
