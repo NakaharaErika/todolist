@@ -6,7 +6,7 @@ public class GenreWork {
 	/** ジャンル名 */
 	private String genreName;
 	/** ジャンル保有者名 */
-	private int ownerId;
+	private String ownerId;
 	
 	
 	/**
@@ -16,7 +16,7 @@ public class GenreWork {
 	}
 
 	
-	public GenreWork(int ownerId) {
+	public GenreWork(String ownerId) {
 		this.ownerId = ownerId;
 		
 	}
@@ -39,10 +39,10 @@ public class GenreWork {
 	}
 	
 	/**オーナー名のゲッターとセッター*/
-	public int getOwnerId() {
+	public String getOwnerId() {
 		return ownerId;
 	}
-	public void setOwnerId(int ownerId) {
+	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
 	}
 }

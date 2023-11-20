@@ -3,8 +3,10 @@ package controller;
 import java.io.IOException;
 
 import entity.DBWork;
+import entity.GenreWork;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,11 +14,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import service.CheckFalseCount;
 import service.DBWorkService;
+import service.GenreWorkService;
 
 @WebServlet("/start")
 public class StartServlet extends HttpServlet {
 	
 	DBWorkService service = new DBWorkService();
+	GenreWorkService genreService = new GenreWorkService();
 	CheckFalseCount check = new CheckFalseCount();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,6 +36,9 @@ public class StartServlet extends HttpServlet {
 	    String userId = request.getParameter("user_id");
 	    String password = request.getParameter("password");
 	    String view = null;
+	    
+	    if (!userId.trim().isEmpty() && !password.trim().isEmpty()) {
+	    
 	    //ユーザーIDが存在するかチェック
 	    if(service.checkUserIDExist(userId)) {
 	    	//アカウントがロックされていないかチェック
@@ -43,6 +50,11 @@ public class StartServlet extends HttpServlet {
 			    	check.countReset(userId);
 			    	HttpSession session = request.getSession();//パスワード以外の情報をセッションとして保持
 			        session.setAttribute("loggedInUser", dbWork);
+			        
+			        //ジャンル情報をセッションとして保持
+			        GenreWork genreWork = (GenreWork) genreService.getGenresForUser(userId);
+			        HttpSession genreSession = request.getSession();
+			        ((ServletRequest) genreWork).setAttribute("lginGenre", genreSession);
 			        
 			        view = "/list";
 		    	} else {//ログイン失敗
@@ -60,6 +72,12 @@ public class StartServlet extends HttpServlet {
 	    } else {
 	    	//IDが存在しない場合
 	    	String falseMessage = "IDが存在しません";
+	    	request.setAttribute("message", falseMessage);
+	        view = "/WEB-INF/views/login.jsp";
+	    }
+	    } else {
+	    	//入力していない場合
+	    	String falseMessage = "ゆーざーIDとパスワードを入力してください";
 	    	request.setAttribute("message", falseMessage);
 	        view = "/WEB-INF/views/login.jsp";
 	    }

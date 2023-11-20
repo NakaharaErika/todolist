@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import entity.DBWork;
+import entity.GenreWork;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,7 +29,7 @@ public class GenreServlet extends HttpServlet {
     			request.setAttribute("message", "todoを管理しましょ");
     		}
         	//ここでloggedInUserがtodoリスト内で保持しているジャンル一覧を取得したい
-        	List<Genre> userGenres = genreService.getGenresForUser(loggedInUser.getUserId());
+        	List<GenreWork> userGenres = genreService.getGenresForUser(loggedInUser.getUserId());
         	request.setAttribute("userGenres",usergenres);
         	
             String view = "/WEB-INF/views/genre.jsp";
@@ -37,9 +38,5 @@ public class GenreServlet extends HttpServlet {
         } else {
         	response.sendRedirect("start");
         }
-
-        
 	}
-
-
 }
