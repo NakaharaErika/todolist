@@ -8,12 +8,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.DBWorkService;
 
 @WebServlet("/resetAcc")
 public class ResetServlet extends HttpServlet {
-	
-	DBWorkService service = new DBWorkService();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//パスワードのリセット画面を表示

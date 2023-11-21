@@ -13,6 +13,7 @@ import java.util.List;
 public class WorkDaoJDBC {
 
 	//DB接続のための共有メソッド
+	//今回はこれでOKだが、実務上ではConnectionはDaoの外で行う
 	private Connection createConnection() throws ClassNotFoundException, SQLException {
 		String dbUrl = "jdbc:mysql://localhost/kogi_3";
 		String dbUser = "root";
@@ -54,6 +55,7 @@ public class WorkDaoJDBC {
     }
 
     // ResultSetから中身を取り出し、キーバリュー形式のリストに変換
+    //　todo課題では、取り出し後の値を型変換する手間が発生するので、このメソッドはDaoの外でもOK
     private List<HashMap<String, Object>> resultSetToList(ResultSet rs) throws SQLException {
         List<HashMap<String, Object>> list = new ArrayList<>();
         //ResultSetMetaDataオブジェクトでResultSetオブジェクトの列の型とプロパティに関する情報を取得する
