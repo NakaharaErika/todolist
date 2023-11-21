@@ -39,8 +39,10 @@ contentType="text/html; charset=UTF-8"
 </head>
 <body>
 	<h1>ジャンル</h1>
-	<% DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
-	   List<GenreWork> userGnres = (List<GenreWork>) request.getAttribute("uuserGeres"); %>
+	<%
+	DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
+		   List<DepartmentWork> userGnres = (List<DepartmentWork>) request.getAttribute("uuserGeres");
+	%>
 	   
 			<% if (loggedInUser != null) { %>
 			    <p><%= loggedInUser.getName() %>さん</p>
