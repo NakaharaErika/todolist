@@ -30,13 +30,20 @@ public class SortServlet extends HttpServlet {
 			String item = request.getParameter("items");
 			String sortItem = request.getParameter("sort");
 			//項目と並べ替え順を受け取ってリストに挿入
-	        List<HashMap<String, String>> todos = sort.getTodoListBySort(loggedInUser.getNo(), item, sortItem);
-	        request.setAttribute("rows", todos);
-	        request.setAttribute("message", sortItem(item) + " 順に " + sortStr(sortItem) + " で並べ替えました");
-			
-	        String view = "/WEB-INF/views/list.jsp";
-	        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
-			dispatcher.forward(request, response);
+	        List<HashMap<String, String>> todos;
+			try {
+				todos = sort.getTodoListBySort(loggedInUser.getNo(), item, sortItem);
+				
+				request.setAttribute("rows", todos);
+		        request.setAttribute("message", sortItem(item) + " 順に " + sortStr(sortItem) + " で並べ替えました");
+				
+		        String view = "/WEB-INF/views/list.jsp";
+		        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
+				dispatcher.forward(request, response);
+			} catch (Exception e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}    
 		} else {
 	    	response.sendRedirect("start");
 	    }

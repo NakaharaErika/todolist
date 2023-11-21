@@ -68,7 +68,7 @@ contentType="text/html; charset=UTF-8"
 			    <td><a href='show?id=<%= columns.get("No") %>'><%= columns.get("title") %></a></td>
 			    <td><%= columns.get("genre") %></td>
 			    <td><%= columns.get("date") %></td>
-			    <td><%= columns.get("priority") %></td>
+			    <td><%= columns.get("priorityLevel") %></td>
 			 <tr>
 			<% } %>
 		</tbody>

@@ -1,19 +1,33 @@
 package service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import dao.DBWorkDaoJDBC;
+import dao.WorkDaoJDBC;
 
-public class GetTodoListByUserId{
-	//ユーザーIDの主キーを元に、todoリストの一覧を作成する。
-    private DBWorkDaoJDBC dao = new DBWorkDaoJDBC();
-    private String createAccountSQL = "SELECT * FROM todo "
-    		+ "INNER JOIN priority ON todo.priority = priority.id "
-    		+ "INNER JOIN genres ON todo.genreNo  = genres.genreId "
-    		+ "WHERE todo.userID=?";
+public class GetTodoListByUserId {
+    private WorkDaoJDBC dao = new WorkDaoJDBC();
+    private String todoListSQL = "SELECT * FROM todo "
+                                + "INNER JOIN priority ON todo.priority = priority.id "
+                                + "INNER JOIN genres ON todo.genreNo  = genres.genreId "
+                                + "WHERE todo.userID=?";
 
-    public List<HashMap<String, String>> getTodoListByUserId(String no) {
-	    return dao.getTodosByUserId(no,createAccountSQL);
-	}
+    public List<HashMap<String, String>> getTodoListByUserId(String no) throws Exception {
+    	List<Object> params = Arrays.asList(no);
+    	//ログインしたID紐づくユーザーのtodoリストを取り出す。
+        List<HashMap<String, Object>> result = dao.executeQuery(todoListSQL, params);
+        List<HashMap<String, String>> todos = new ArrayList<>();
+        
+        //取り出したリストをArrayListに格納する
+        for (HashMap<String, Object> row : result) {
+            HashMap<String, String> todo = new HashMap<>();
+            for (String key : row.keySet()) {
+                todo.put(key, row.get(key).toString());
+            }
+            todos.add(todo);
+        }
+        return todos;
+    }
 }

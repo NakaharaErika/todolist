@@ -25,8 +25,14 @@ public class ListServlet extends HttpServlet {
 	     DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 	 if (loggedInUser != null) {
 	    	//ユーザーのtodoリストを格納
-	    	List<HashMap<String, String>> todos = list.getTodoListByUserId(loggedInUser.getNo());
-	        request.setAttribute("rows", todos);
+	    	List<HashMap<String, String>> todos;
+			try {
+				todos = list.getTodoListByUserId(loggedInUser.getNo());
+				request.setAttribute("rows", todos);
+			} catch (Exception e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}      
 	 } else {
 		response.sendRedirect("login");
     }
@@ -40,16 +46,21 @@ public class ListServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		
 		 HttpSession session = request.getSession();
 	     DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 	 if (loggedInUser != null) {
 	    	//ユーザーのtodoリストを格納
-	    	List<HashMap<String, String>> todos = list.getTodoListByUserId(loggedInUser.getNo());
-	        request.setAttribute("rows", todos);
+	    	List<HashMap<String, String>> todos;
+			try {
+				todos = list.getTodoListByUserId(loggedInUser.getNo());
+				request.setAttribute("rows", todos);
+			} catch (Exception e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}      
 	 } else {
 		response.sendRedirect("login");
-     }
+   }
 	 	
 	    String view = "/WEB-INF/views/list.jsp";
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view);

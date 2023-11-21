@@ -2,7 +2,7 @@ package entity;
 
 public class GenreWork {
 	/** ジャンルID */
-	private int genreId;
+	private String genreId;
 	/** ジャンル名 */
 	private String genreName;
 	/** ジャンル保有者名 */
@@ -23,10 +23,10 @@ public class GenreWork {
 	
 	
 	/**ジャンルIDのゲッターとセッター*/
-	public int getGenreId() {
+	public String getGenreId() {
 		return genreId;
 	}
-	public void setGenreId(int genreId) {
+	public void setGenreId(String genreId) {
 		this.genreId = genreId;
 	}
 	

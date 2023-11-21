@@ -10,12 +10,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import service.DBWorkService;
+import service.DestroyTodo;
 
 @WebServlet("/destroy")
 public class DestroyServlet extends HttpServlet {
 	
-	private DBWorkService service = new DBWorkService();
+	private DestroyTodo service = new DestroyTodo();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getAttribute("message") == null) {
@@ -28,8 +28,14 @@ public class DestroyServlet extends HttpServlet {
         if (loggedInUser != null) {
 
     		String postId = request.getParameter("id"); // String 型のまま使用
-        	service.destroyTodoList(postId);
-            request.setAttribute("message", "ID:" + postId + "の削除ができました");
+        	try {
+				service.destroyTodoList(postId);
+				request.setAttribute("message", "ID:" + postId + "の削除ができました");
+			} catch (Exception e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+            
    
 	        String view = "/WEB-INF/views/edit.jsp";
 	        RequestDispatcher dispatcher = request.getRequestDispatcher(view);

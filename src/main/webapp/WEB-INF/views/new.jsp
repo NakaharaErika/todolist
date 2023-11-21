@@ -3,21 +3,30 @@ contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <%@ page import="entity.DBWork" %>
+<%@ page import="entity.GenreWork" %>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Todo新規作成</title>
-  <style>ul {list-style: none; margin: 0; padding: 0;} li {float: left; margin-right: 20px; }</style>
+  <link rel="stylesheet" href="./css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <title>Todoリスト</title>
 </head>
 <body>
-	<h1>Todo新規作成</h1>
-	<% DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser"); %>
-			<% if (loggedInUser != null) { %>
-			    <p><%= loggedInUser.getName() %>さん</p>
-			<% } %>
+	<header>
+	    <h1>Todo新規作成</h1>
+	    
+	    <% DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser"); %>
+				<% if (loggedInUser != null) { %>
+				    <p>ようこそ、<%= loggedInUser.getName() %>さん</p>
+				<% } %>
+	    <nav class="pc-nav">
+	    	<form action="logout" method="POST"><input type="submit" value="ログアウト"></form>
+	    </nav>
+	</header>
+	
 	<p><%= request.getAttribute("message") %></p>
 	
 	<form action="create" method="get">
@@ -33,15 +42,11 @@ contentType="text/html; charset=UTF-8"
 	
 			<label for="genre">ジャンル</label><br>
 			<select name="genre" id="genre">
-			    <% if (loggedInUser.getGenre1() != null) { %>
-			        <option value="<%= loggedInUser.getGenre1() %>" selected><%= loggedInUser.getGenre1() %></option>
+			    <% List<Genre> userGenres = (List<Genre>) request.getAttribute("userGenres");
+			       for (Genre genre : userGenres) {
+			    %>
+			    <option value="<%= genre.getGenreId() %>" <%= selectedGenre == genre.getGenreId() ? "selected" : "" %>><%= genre.getGenreName() %></option>
 			    <% } %>
-			    <% if (loggedInUser.getGenre2() != null) { %>
-			        <option value="<%= loggedInUser.getGenre2() %>"><%= loggedInUser.getGenre2() %></option>
-			    <% } %>
-			    <% if (loggedInUser.getGenre3() != null) { %>
-			        <option value="<%= loggedInUser.getGenre3() %>"><%= loggedInUser.getGenre3() %></option>
-		    	<% } %>
 			</select>
 			
 		<br>

@@ -1,65 +1,48 @@
 package service;
 
-import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import dao.DBWorkDaoJDBC;
+import dao.WorkDaoJDBC;
 import entity.DBWork;
 
 public class DBWorkService {
 
-	DBWorkDaoJDBC dao = new DBWorkDaoJDBC();
+	WorkDaoJDBC dao = new WorkDaoJDBC();
 	
 	private String checkUserIdSQL = "SELECT COUNT(*) FROM account WHERE userID = ?";
 	private String checkUserPassSQL = "SELECT * FROM account WHERE userID=? AND pass=?";
 	
 	//ユーザーIDが既に登録されているか調べる
-	public Boolean checkUserIDExist(String userId) {
-        if (dao.doesUserIdExist(userId, checkUserIdSQL)) {
-            return true;
-        }
-        return false;
+	public Boolean checkUserIDExist(String userId) throws Exception{
+		//asLIst配列：引数で指定した配列をリストとして返す
+        List<Object> params = Arrays.asList(userId);
+        
+        List<HashMap<String, Object>> result = dao.executeQuery(checkUserIdSQL,params);
+        //もし、得られた結果がnulはなく、１行目のキーの中身がnull出なければ（この場合は1)なら、1(true)を返す
+		if (!result.isEmpty() && result.get(0).get("COUNT(*)") != null) {
+			return (Long) result.get(0).get("COUNT(*)") > 0;
+		}
+		return false;
     }
 	
 	//パスワードが一致しているか調べる
-    public DBWork login(String id,String pass) {
-		try {
-	        String hashedPassword = HashGenerator.generateHash(pass);
-	        DBWork dbWork = new DBWork(id);
-	        return dao.checkAccount(dbWork,hashedPassword,checkUserPassSQL);
-	    } catch (NoSuchAlgorithmException e) {
-	        e.printStackTrace();
-	        throw new RuntimeException(e);
+    public DBWork login(String id,String pass) throws Exception {
+		String hashedPassword = HashGenerator.generateHash(pass);
+		
+		List<Object> params = Arrays.asList(id, hashedPassword);
+		List<HashMap<String, Object>> result = dao.executeQuery(checkUserPassSQL, params);
+		
+	    if(!result.isEmpty()) {
+	    	//得られた配列の１番目（そもそも１個しか抽出されないけど）を取得して、DBWorkクラスに値を登録
+	    	HashMap<String, Object> row = result.get(0);
+	    	DBWork dbWork = new DBWork(id);
+	    	dbWork.setName((String) row.get("name"));
+	    	//int→Stringに変換
+	    	dbWork.setNo(Integer.toString((Integer) row.get("No")));
+	    	return dbWork;
 	    }
+	    return null;
 	}
-	
-	
-
-	
-	
-	public HashMap<String, String> getTodoListByNo(String todoNo) {
-		return dao.getTodoByNo(todoNo);
-	}
-	
-	public void updateTodoList(String todoNo,String title,String content,String genre,String priority) {
-		dao.updateTodo(todoNo,title,content,genre,priority);
-	}
-	
-	public List<HashMap<String, String>> getListPriorities() {
-	    return dao.getPriorities();
-	}
-	
-	public void destroyTodoList(String todoNo) {
-		dao.destroyTodo(todoNo);
-	}
-	
-	public void createTodoList(DBWork dbWork, String title,String content,String genre,String priority,String date) {
-		dao.createTodo(dbWork, title,content,genre,priority,date);
-	}
-	
-	public void editGenreList(DBWork dbWork, String genre1,String genre2,String genre3) {
-		dao.editGenre(dbWork,genre1,genre2,genre3);
-	}
-
 }

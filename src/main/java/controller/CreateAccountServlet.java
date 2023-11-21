@@ -25,19 +25,26 @@ public class CreateAccountServlet extends HttpServlet {
         String message;
         String view;
         
-        // アカウント作成の試み
-        Boolean accountCreated =  createaccount.createAccount(userId, password, userName);
-        if(accountCreated) {
-            view = "/WEB-INF/views/login.jsp";
-            message = "アカウントを新規作成しました";
-        } else {
-            view = "/WEB-INF/views/account.jsp";
-            message = "このアカウント名はすでに存在しています";
-        }
+        // アカウント作成
+        Boolean accountCreated;
+		try {
+			accountCreated = createaccount.createAccount(userId, password, userName);
+			if(accountCreated) {
+	            view = "/WEB-INF/views/login.jsp";
+	            message = "アカウントを新規作成しました";
+	        } else {
+	            view = "/WEB-INF/views/account.jsp";
+	            message = "このアカウント名はすでに存在しています";
+	        }
+	        
+	        request.setAttribute("message", message);
+	        
+	        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
+	        dispatcher.forward(request, response);
+		} catch (Exception e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
         
-        request.setAttribute("message", message);
-        
-        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
-        dispatcher.forward(request, response);
     }
 }

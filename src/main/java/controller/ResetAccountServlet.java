@@ -26,22 +26,27 @@ public class ResetAccountServlet extends HttpServlet {
 	    String password = request.getParameter("password");
 	    String view = null;
 	    //ユーザーIDが存在するかチェック
-	    if(service.checkUserIDExist(userId)) {
-	    	if( password != null) {
-			    //パスワードをリセットする
-		    	reset.ResetPass(userId,password);
-		    	request.setAttribute("message", "新しいパスワードをセットしました");
-		    	view = "/WEB-INF/views/login.jsp";
-	    	} else {
-	    		request.setAttribute("message", "パスワードを入力してください");
-		    	view = "/WEB-INF/views/reset.jsp";
-	    	}
-	    } else {
-	    	//IDが存在しない場合
-	    	String falseMessage = "IDが存在しません";
-	    	request.setAttribute("message", falseMessage);
-	        view = "/WEB-INF/views/reset.jsp";
-	    }
+	    try {
+			if(service.checkUserIDExist(userId)) {
+				if( password != null) {
+				    //パスワードをリセットする
+			    	reset.ResetPass(userId,password);
+			    	request.setAttribute("message", "新しいパスワードをセットしました");
+			    	view = "/WEB-INF/views/login.jsp";
+				} else {
+					request.setAttribute("message", "パスワードを入力してください");
+			    	view = "/WEB-INF/views/reset.jsp";
+				}
+			} else {
+				//IDが存在しない場合
+				String falseMessage = "IDが存在しません";
+				request.setAttribute("message", falseMessage);
+			    view = "/WEB-INF/views/reset.jsp";
+			}
+		} catch (Exception e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view);
 		dispatcher.forward(request, response);

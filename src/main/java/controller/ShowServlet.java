@@ -11,28 +11,39 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import service.DBWorkService;
+import service.GetTodoListByNo;
 
 @WebServlet("/show")
 public class ShowServlet extends HttpServlet {
 
-    private DBWorkService service = new DBWorkService();
+    private GetTodoListByNo service = new GetTodoListByNo();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getAttribute("message") == null) {
-            request.setAttribute("message", "todoを管理しましょう");
-        }
+        
+    	 HttpSession session = request.getSession();
+         DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
 
-        String postId = request.getParameter("id"); // String 型のまま使用
-        HttpSession session = request.getSession();
-        DBWork loggedInUser = (DBWork) session.getAttribute("loggedInUser");
-
-        if (loggedInUser != null) {
-            HashMap<String, String> todoDetails = service.getTodoListByNo(postId); // 型変換は不要
-            request.setAttribute("todoDetails", todoDetails);
-        } else {
-            request.setAttribute("errorMessage", "セッションがタイムアウトしました。もう一度ログインしてください。");
-        }
+         if (loggedInUser != null) {
+    	
+		    	if (request.getAttribute("message") == null) {
+		            request.setAttribute("message", "todoを管理しましょう");
+		        }
+		
+		        String postId = request.getParameter("id"); // String 型のまま使用
+		        	//todoの取り出し
+		            HashMap<String, String> todoDetails;
+					try {
+						todoDetails = service.getTodoListByNo(postId);
+						request.setAttribute("todoDetails", todoDetails);
+			            
+					} catch (Exception e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					} 
+		            
+		        } else {
+		        	response.sendRedirect("login");
+		        }
 
         String view = "/WEB-INF/views/post.jsp";
         RequestDispatcher dispatcher = request.getRequestDispatcher(view);
