@@ -13,7 +13,7 @@ public class GetTodoListByUserId {
                                 + "INNER JOIN priority ON todo.priority = priority.id "
                                 + "INNER JOIN genres ON todo.genreNo  = genres.genreId "
                                 + "WHERE todo.userID=?";
-
+    //ログインしたユーザーIDに紐づくtodoのリストを取得する
     public List<HashMap<String, String>> getTodoListByUserId(String no) throws Exception {
     	List<Object> params = Arrays.asList(no);
     	//ログインしたID紐づくユーザーのtodoリストを取り出す。
@@ -22,6 +22,7 @@ public class GetTodoListByUserId {
         
         //取り出したリストをArrayListに格納する
         for (HashMap<String, Object> row : result) {
+        	//今回は全てString型に変換する
             HashMap<String, String> todo = new HashMap<>();
             for (String key : row.keySet()) {
                 todo.put(key, row.get(key).toString());
